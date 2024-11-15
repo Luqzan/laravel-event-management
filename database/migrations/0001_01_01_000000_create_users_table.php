@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('password');
-            $table->rememberToken();
+            $table->rememberToken()->default(Str::random(10));
             $table->timestamps();
         });
 

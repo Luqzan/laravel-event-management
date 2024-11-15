@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
 use App\Http\Traits\CanLoadRelationships;
 use App\Models\Event;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -61,7 +62,17 @@ class EventController extends Controller implements HasMiddleware
     {
         Gate::authorize('view', $event);
 
-        return new EventResource($this->loadRelationships($event));
+        try {
+            Gate::authorize('view', $event);
+
+            // If the event doesn't exist, this will throw a ModelNotFoundException
+            return new EventResource($this->loadRelationships($event));
+        } catch (ModelNotFoundException $e) {
+            // Return a custom error response when the event is not found
+            return response()->json([
+                'message' => 'Event doesn\'t exist',
+            ], 404);
+        }
     }
 
     /**

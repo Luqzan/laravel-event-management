@@ -18,7 +18,7 @@ class AttendeeSeeder extends Seeder
         $events = Event::all();
 
         foreach ($users as $user) {
-            $eventsToAttend = $events->random(rand(1, 3));
+            $eventsToAttend = $events->random(rand(1, 5));
 
             foreach ($eventsToAttend as $event) {
                 Attendee::create([
